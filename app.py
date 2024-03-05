@@ -10,8 +10,8 @@ client = MongoClient(
     host="192.168.5.92",
     port=27017,
 )
-db = client["testdb"]
-collection = db["users"]
+db = client["ejercicio_db"]
+collection = db["personal_informacion"]
 
 
 class User(BaseModel):
