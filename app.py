@@ -7,11 +7,8 @@ from pymongo import MongoClient
 app = FastAPI()
 
 client = MongoClient(
-    host="mongodb",
+    host="192.168.5.92",
     port=27017,
-    username='root',
-    password='pass', 
-    authSource="admin"
 )
 db = client["testdb"]
 collection = db["users"]
