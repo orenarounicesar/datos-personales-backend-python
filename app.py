@@ -3,20 +3,8 @@ from pydantic import BaseModel
 from typing import Optional
 import uvicorn
 from pymongo import MongoClient
+from fastapi_utils.openapi import get_swagger_ui_html, get_openapi
 
-from flask_swagger_ui import get_swaggerui_blueprint
-
-SWAGGER_URL = '/api/docs'  
-API_URL = '/static/swagger.json'  
-
-
-swaggerui_blueprint = get_swaggerui_blueprint(
-    SWAGGER_URL,
-    API_URL,
-    config={
-        'app_name': "Mi Aplicación Flask con Swagger"
-    }
-)
 app = FastAPI()
 
 client = MongoClient(
@@ -25,8 +13,6 @@ client = MongoClient(
 )
 db = client["ejercicio_db"]
 collection = db["personal_informacion"]
-
-app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
 class User(BaseModel):
@@ -50,6 +36,17 @@ def get_all_documents():
 def get_document_by_tipo(tipo_documento: str):
     document = collection.find_one({"tipoDocumento": tipo_documento})
     return document
+
+
+# Rutas para servir la documentación de Swagger
+@app.get("/docs", include_in_schema=False)
+async def get_swagger_ui_html():
+    return get_swagger_ui_html(openapi_url="/openapi.json")
+
+
+@app.get("/openapi.json", include_in_schema=False)
+async def get_openapi():
+    return get_openapi(app)
 
 
 if __name__ == "__main__":
