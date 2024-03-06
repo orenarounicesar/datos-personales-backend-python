@@ -4,6 +4,19 @@ from typing import Optional
 import uvicorn
 from pymongo import MongoClient
 
+from flask_swagger_ui import get_swaggerui_blueprint
+
+SWAGGER_URL = '/api/docs'  
+API_URL = '/static/swagger.json'  
+
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Mi Aplicación Flask con Swagger"
+    }
+)
 app = FastAPI()
 
 client = MongoClient(
@@ -12,6 +25,8 @@ client = MongoClient(
 )
 db = client["ejercicio_db"]
 collection = db["personal_informacion"]
+
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
 class User(BaseModel):
