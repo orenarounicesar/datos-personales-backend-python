@@ -14,12 +14,10 @@ load_dotenv()
 HOST_MongoDB = os.getenv('HOST_MongoDB')
 PORT_MongoDB = os.getenv('PORT_MongoDB')
 
-print(PORT_MongoDB)
-
 client = MongoClient(host=HOST_MongoDB, port=int(PORT_MongoDB))
 
 db = client["ejercicio_db"]
-collection = db["personal_information"]
+collection = db["PersonalInformation"]
 
 @app.get("/documents")
 async def get_all_documents():
