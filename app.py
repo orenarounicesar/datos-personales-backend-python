@@ -4,13 +4,20 @@ import uvicorn
 from pymongo import MongoClient
 from fastapi.openapi.utils import get_openapi
 from bson import json_util
+from dotenv import load_dotenv
+import os
 
 app = FastAPI()
 
-client = MongoClient(host="192.168.5.92", port=27017)#172.17.0.2
+load_dotenv()
+
+HOST_MongoDB = os.getenv('HOST_MongoDB')
+PORT_MongoDB = os.getenv('PORT_MongoDB')
+
+client = MongoClient(host=HOST_MongoDB, port=int(PORT_MongoDB))
 
 db = client["ejercicio_db"]
-collection = db["personal_information"]
+collection = db["PersonalInformation"]
 
 @app.get("/documents")
 async def get_all_documents():
