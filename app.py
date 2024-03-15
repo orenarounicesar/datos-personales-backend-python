@@ -3,11 +3,21 @@ from fastapi import FastAPI
 import uvicorn
 from pymongo import MongoClient
 from fastapi.openapi.utils import get_openapi
-from bson import json_util
+from bson import ObjectId, json_util
 from dotenv import load_dotenv
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Configuración de CORS para permitir desde cualquier origen
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir desde cualquier origen
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
 
 load_dotenv()
 
@@ -24,6 +34,13 @@ async def get_all_documents():
     documents = collection.find({})
     serialized_documents = json_util.dumps(documents)
     json_legible = json.loads(serialized_documents)
+    return json_legible
+
+@app.get("/documents/byid/")
+def get_document_by_id(id: str):
+    document = collection.find_one({"_id": ObjectId(id)})
+    serialized_document = json_util.dumps(document)
+    json_legible = json.loads(serialized_document)
     return json_legible
 
 @app.get("/documents/{tipo_documento}")
