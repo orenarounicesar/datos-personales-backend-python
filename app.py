@@ -36,9 +36,9 @@ async def get_all_documents():
     json_legible = json.loads(serialized_documents)
     return json_legible
 
-@app.get("/documents/byid/")
-def get_document_by_id(id: str):
-    document = collection.find_one({"_id": ObjectId(id)})
+@app.get("/documents/byid/{_id}")
+def get_document_by_id(_id: str):
+    document = collection.find_one({"_id": ObjectId(_id)})
     serialized_document = json_util.dumps(document)
     json_legible = json.loads(serialized_document)
     return json_legible
